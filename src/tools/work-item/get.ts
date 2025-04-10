@@ -11,11 +11,12 @@ export async function getWorkItem(args: WorkItemBatchGetRequest, config: AzureDe
   AzureDevOpsConnection.initialize(config);
   const connection = AzureDevOpsConnection.getInstance();
   const workItemTrackingApi = await connection.getWorkItemTrackingApi();
+  // Don't use both fields and expand parameters together as Azure DevOps API doesn't allow it
   const workItems = await workItemTrackingApi.getWorkItems(
     args.ids,
-    args.fields || ['System.Id', 'System.Title', 'System.State', 'System.Description'],
+    args.fields || ['System.Id', 'System.Title', 'System.State', 'System.Description', 'System.WorkItemType', 'System.AssignedTo', 'System.IterationPath', 'System.Tags'],
     args.asOf,
-    WorkItemExpand.All,
+    args.fields ? undefined : WorkItemExpand.All, // Only use expand if fields is not provided
     args.errorPolicy,
     config.project
   );

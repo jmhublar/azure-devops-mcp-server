@@ -73,7 +73,8 @@ Add the following configuration to the `mcpServers` object:
       "env": {
         "AZURE_DEVOPS_ORG": "your-organization",
         "AZURE_DEVOPS_PAT": "your-personal-access-token",
-        "AZURE_DEVOPS_PROJECT": "your-project-name"
+        "AZURE_DEVOPS_PROJECT": "your-project-name",
+        "TLS_INSECURE": "false" // Set to 'true' to bypass TLS certificate validation (not recommended for production)
       },
       "disabled": false,
       "autoApprove": []
@@ -87,6 +88,7 @@ Replace the following values:
 - `your-organization`: Your Azure DevOps organization name
 - `your-project-name`: Your Azure DevOps project name
 - `your-personal-access-token`: The PAT you generated in step 1
+- `TLS_INSECURE`: Optional. Set to 'true' to bypass TLS certificate validation (not recommended for production environments)
 
 ## Available Tools
 
@@ -133,6 +135,11 @@ npm run inspector
    - Check that the path in your MCP settings is correct
    - Verify your Azure DevOps credentials
    - Check the Cline logs for any error messages
+   - If you encounter TLS certificate validation issues, try setting `TLS_INSECURE` to 'true'
+
+2. If you get "The expand parameter can not be used with the fields parameter" error:
+   - This is a known issue with the Azure DevOps API when trying to use both expand and fields parameters together
+   - The server has been updated to handle this case properly
 
 2. If you get authentication errors:
    - Verify your PAT hasn't expired

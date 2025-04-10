@@ -6,7 +6,16 @@ export interface AzureDevOpsConfig {
   org: string;
   project: string;
   orgUrl: string;
+  // TLS_INSECURE is handled separately via process.env.TLS_INSECURE
 }
+
+/**
+ * Environment variables:
+ * - AZURE_DEVOPS_PAT: Personal Access Token for Azure DevOps
+ * - AZURE_DEVOPS_ORG: Azure DevOps organization name
+ * - AZURE_DEVOPS_PROJECT: Azure DevOps project name
+ * - TLS_INSECURE: Set to 'true' to bypass TLS certificate validation (not recommended for production)
+ */
 
 function validateConfigValue(value: string | undefined, name: string): string {
   if (!value || value.trim() === '') {
