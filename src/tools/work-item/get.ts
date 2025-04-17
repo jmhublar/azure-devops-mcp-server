@@ -8,15 +8,21 @@ export async function getWorkItem(args: WorkItemBatchGetRequest, config: AzureDe
     throw new McpError(ErrorCode.InvalidParams, 'Invalid work item ID');
   }
 
+  // Log the arguments for debugging
+  console.error('getWorkItem args:', JSON.stringify(args, null, 2));
+
   AzureDevOpsConnection.initialize(config);
   const connection = AzureDevOpsConnection.getInstance();
   const workItemTrackingApi = await connection.getWorkItemTrackingApi();
-  // Don't use both fields and expand parameters together as Azure DevOps API doesn't allow it
+
+  // Always use fields parameter and never use expand parameter
+  const defaultFields = ['System.Id', 'System.Title', 'System.State', 'System.Description', 'System.WorkItemType', 'System.AssignedTo', 'System.IterationPath', 'System.Tags'];
+  
   const workItems = await workItemTrackingApi.getWorkItems(
     args.ids,
-    args.fields || ['System.Id', 'System.Title', 'System.State', 'System.Description', 'System.WorkItemType', 'System.AssignedTo', 'System.IterationPath', 'System.Tags'],
+    args.fields || defaultFields,
     args.asOf,
-    args.fields ? undefined : WorkItemExpand.All, // Only use expand if fields is not provided
+    undefined, // Never use expand parameter
     args.errorPolicy,
     config.project
   );
